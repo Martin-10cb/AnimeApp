@@ -3,13 +3,13 @@ import { useTheme } from '../theme/useTheme';
 
 
 export default function ButtonText({ style, ...props }: TextProps) {
-  const theme = useTheme();
+  const { colors, isDark } = useTheme();
   const { width } = useWindowDimensions(); 
 
   const fontSize = width < 480 ? 16 : 20;
 
   return (
-    <Text {...props} style={[styles.text, { color: theme.mainText, fontSize }, style]} />
+    <Text {...props} style={[styles.text, { color: colors.mainText, fontSize }, style]} />
   );
 }
 

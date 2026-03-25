@@ -6,17 +6,21 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useTheme } from '../theme/useTheme';
-import { hexToRgba } from '../helpers/utils/color';
-import GeneralText from '../components/generalText';
-import GeneralTitle from '../components/generalTitle';
-import ButtonText from '../components/buttonText';
 import { useState } from 'react';
+import { hexToRgba } from '../../helpers/utils/color';
+import GeneralText from '../../components/generalText';
+import ButtonText from '../../components/buttonText';
+import GeneralTitle from '../../components/generalTitle';
+import { useTheme } from '../../theme/useTheme';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParams } from '../navigation/StackNavigator';
 
-export default function StartScreen() {
+interface Props extends NativeStackScreenProps<RootStackParams, 'StartScreen'> {}
+
+export default function StartScreen({navigation}: Props) {
   const { width, height } = useWindowDimensions();
   const isTablet = width >= 768;
-  const theme = useTheme();
+  const { colors, isDark } = useTheme();
 
   const heroHeight = isTablet ? height * 0.6 : height * 0.5;
   const cardWidth = isTablet ? 456 : 352;
@@ -35,9 +39,9 @@ export default function StartScreen() {
 
         <LinearGradient
           colors={[
-            hexToRgba(theme.background, 0),
-            hexToRgba(theme.background, 0.75),
-            theme.background,
+            hexToRgba(colors.background, 0),
+            hexToRgba(colors.background, 0.75),
+            colors.background,
           ]}
           locations={[0, 0.55, 1]}
           style={styles.heroFade}
@@ -52,14 +56,14 @@ export default function StartScreen() {
           Sumérgete en un mundo lleno de historias, da tu opinión, crea rachas
           con amigos y comparte tus propias historias
         </GeneralText>
-        <Pressable style={[styles.button, { backgroundColor: theme.button }]}>
+        <Pressable style={[styles.button, { backgroundColor: colors.button }]}>
           <ButtonText style={styles.text}>Comenzar</ButtonText>
         </Pressable>
       </View>
       <View style={styles.infoLogin}>
         <GeneralText>Ya tienes una cuenta? </GeneralText>
-        <Pressable >
-          <ButtonText style={[styles.text,{color: theme.button}]}>Iniciar sesión</ButtonText>
+        <Pressable onPress={() => navigation.navigate('LoginScreen')}>
+          <ButtonText style={[styles.text,{color: colors.button}]}>Iniciar sesión</ButtonText>
         </Pressable>
       </View>
     </View>

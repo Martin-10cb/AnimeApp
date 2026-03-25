@@ -1,16 +1,19 @@
-import { Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import globalLayout from './components/globalLayout';
+import { NavigationContainer } from '@react-navigation/native';
+import { StackNavigator } from './presentation/navigation/StackNavigator';
+import { useTheme } from './theme/useTheme';
 import RootLayout from './components/globalLayout';
-import HomeScreen from './screens/HomeScreen';
-import StartScreen from './screens/StartScreen';
 
 export const MainApp = () => {
+  const { navigationTheme } = useTheme();
+
   return (
     <SafeAreaProvider>
-        <RootLayout>
-          <StartScreen />
-        </RootLayout>
+      <RootLayout>
+        <NavigationContainer theme={navigationTheme}>
+          <StackNavigator />
+        </NavigationContainer>
+      </RootLayout>
     </SafeAreaProvider>
   );
 };
