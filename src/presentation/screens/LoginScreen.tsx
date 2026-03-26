@@ -1,33 +1,55 @@
+import React, { useState } from 'react';
 import {
+  Alert,
   Image,
   Pressable,
   StyleSheet,
-  TextInput,
   useWindowDimensions,
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useState } from 'react';
+import { signInWithGoogle } from '../../auth/googleAuth';
 import { hexToRgba } from '../../helpers/utils/color';
 import GeneralText from '../../components/generalText';
-import ButtonText from '../../components/buttonText';
 import GeneralTitle from '../../components/generalTitle';
+import ButtonText from '../../components/buttonText';
 import { useTheme } from '../../theme/useTheme';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParams } from '../navigation/StackNavigator';
+ // ajusta ruta si no usas src
 
 interface Props extends NativeStackScreenProps<RootStackParams, 'LoginScreen'> {}
 
-export default function LoginScreen() {
+export default function LoginScreen({navigation}: Props) {
   const { width, height } = useWindowDimensions();
   const isTablet = width >= 768;
   const { colors, isDark } = useTheme();
 
-  const heroHeight = isTablet ? height * 0.6 : height * 0.4;
-  const buttonWidth = isTablet ? '40%' : '65%';
+  const heroHeight = isTablet ? height * 0.6 : height * 0.5;
+  const cardWidth = isTablet ? 456 : 352;
 
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
+  const handleGoogleSignIn = async () => {
+    try {
+      setLoadingGoogle(true);
+
+      const userCredential = await signInWithGoogle();
+
+      Alert.alert(
+        'Sesión iniciada',
+        `Bienvenido${userCredential.user.displayName ? `, ${userCredential.user.displayName}` : ''}`
+      );
+
+      // Aquí después puedes navegar a Home
+      // navigation.navigate('Home');
+    } catch (error: any) {
+      Alert.alert('Error', error?.message ?? 'No se pudo iniciar sesión con Google');
+    } finally {
+      setLoadingGoogle(false);
+    }
+  };
 
   return (
     <View>
@@ -50,18 +72,31 @@ export default function LoginScreen() {
         />
       </View>
 
-      <View style={[styles.generalInfo]}>
-        <GeneralTitle style={styles.title}>Ingresar</GeneralTitle>
-        <TextInput style={{borderColor: "white", borderWidth: 1, paddingVertical: 10, borderRadius: 10, width: buttonWidth}} placeholder="Email"></TextInput>
-        <TextInput style={{borderColor: "white", borderWidth: 1, paddingHorizontal: 120, paddingVertical: 10, borderRadius: 10}} placeholder="Contraseña"></TextInput>
-        <Pressable style={[styles.button, { backgroundColor: colors.button }]}>
-          <ButtonText style={styles.text}>Comenzar</ButtonText>
+      <View style={styles.generalInfo}>
+        <GeneralTitle style={styles.title}>Bienvenido a MangaKai</GeneralTitle>
+
+        <GeneralText style={[styles.text, { width: cardWidth }]}>
+          Sumérgete en un mundo lleno de historias, da tu opinión, crea rachas
+          con amigos y comparte tus propias historias
+        </GeneralText>
+
+        <Pressable
+          style={[styles.button, { backgroundColor: colors.button }]}
+          onPress={handleGoogleSignIn}
+          disabled={loadingGoogle}
+        >
+          <ButtonText style={styles.text}>
+            {loadingGoogle ? 'Conectando...' : 'Continuar con Google'}
+          </ButtonText>
         </Pressable>
       </View>
+
       <View style={styles.infoLogin}>
         <GeneralText>Ya tienes una cuenta? </GeneralText>
-        <Pressable >
-          <ButtonText style={[styles.text,{color: colors.button}]}>Iniciar sesión</ButtonText>
+        <Pressable onPress={() => setShowLogin(true)}>
+          <ButtonText style={[styles.text, { color: colors.button }]}>
+            Iniciar sesión
+          </ButtonText>
         </Pressable>
       </View>
     </View>
@@ -106,6 +141,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 1,
-    marginTop:20,
+    marginTop: 20,
   },
 });

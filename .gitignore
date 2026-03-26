@@ -73,3 +73,27 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Firebase / secrets
+ios/GoogleService-Info.plist
+android/app/google-services.json
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React Native / Metro
+.expo/
+dist/
+tmp/
+temp/
+
+# Optional: keep local Xcode user data out
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
