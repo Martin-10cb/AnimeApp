@@ -25,6 +25,7 @@
 		5709B34CF0A7D63546082F79 /* Pods-AnimeAppProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnimeAppProject.release.xcconfig"; path = "Target Support Files/Pods-AnimeAppProject/Pods-AnimeAppProject.release.xcconfig"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = AnimeAppProject/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AnimeAppProject/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AA639B2002844743A1EED7C9 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/@react-native-vector-icons/ionicons/fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		BA9733D12F74B7C9000325F8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -63,6 +64,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		5E4673600A9D442AB0C30245 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AA639B2002844743A1EED7C9 /* Ionicons.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +87,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				5E4673600A9D442AB0C30245 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";

@@ -4,6 +4,7 @@ import {
   Image,
   Pressable,
   StyleSheet,
+  TextInput,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -16,7 +17,7 @@ import ButtonText from '../../components/buttonText';
 import { useTheme } from '../../theme/useTheme';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParams } from '../navigation/StackNavigator';
- // ajusta ruta si no usas src
+import Ionicons from '@react-native-vector-icons/ionicons';
 
 interface Props extends NativeStackScreenProps<RootStackParams, 'LoginScreen'> {}
 
@@ -25,7 +26,7 @@ export default function LoginScreen({navigation}: Props) {
   const isTablet = width >= 768;
   const { colors, isDark } = useTheme();
 
-  const heroHeight = isTablet ? height * 0.6 : height * 0.5;
+  const heroHeight = isTablet ? height * 0.4 : height * 0.4;
   const cardWidth = isTablet ? 456 : 352;
 
   const [loadingGoogle, setLoadingGoogle] = useState(false);
@@ -34,16 +35,11 @@ export default function LoginScreen({navigation}: Props) {
   const handleGoogleSignIn = async () => {
     try {
       setLoadingGoogle(true);
-
       const userCredential = await signInWithGoogle();
-
       Alert.alert(
         'Sesión iniciada',
         `Bienvenido${userCredential.user.displayName ? `, ${userCredential.user.displayName}` : ''}`
       );
-
-      // Aquí después puedes navegar a Home
-      // navigation.navigate('Home');
     } catch (error: any) {
       Alert.alert('Error', error?.message ?? 'No se pudo iniciar sesión con Google');
     } finally {
@@ -73,13 +69,11 @@ export default function LoginScreen({navigation}: Props) {
       </View>
 
       <View style={styles.generalInfo}>
-        <GeneralTitle style={styles.title}>Bienvenido a MangaKai</GeneralTitle>
-
-        <GeneralText style={[styles.text, { width: cardWidth }]}>
-          Sumérgete en un mundo lleno de historias, da tu opinión, crea rachas
-          con amigos y comparte tus propias historias
-        </GeneralText>
-
+        <GeneralTitle style={styles.title}>Ingresar</GeneralTitle>
+        <View>
+          <Ionicons name="mail" size={20} />
+          <TextInput placeholder='Email'></TextInput>
+        </View>
         <Pressable
           style={[styles.button, { backgroundColor: colors.button }]}
           onPress={handleGoogleSignIn}

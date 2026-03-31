@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>771651338466-t9cih5qp17dmhkk49jbjtbjmapld6r7g.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.771651338466-t9cih5qp17dmhkk49jbjtbjmapld6r7g</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>771651338466-1c4c0perb1sbng1odfdpspn34gt9n7v1.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDaF1bkGedMZDpFwINf-tYU3qIuPh75UoU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>771651338466</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.AnimeAppProject</string>
+	<key>PROJECT_ID</key>
+	<string>animeapp-590e3</string>
+	<key>STORAGE_BUCKET</key>
+	<string>animeapp-590e3.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:771651338466:ios:6efb8352a86f895089debb</string>
+</dict>
+</plist>
