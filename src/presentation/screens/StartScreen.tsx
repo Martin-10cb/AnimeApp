@@ -62,7 +62,7 @@ export default function StartScreen({navigation}: Props) {
       </View>
       <View style={styles.infoLogin}>
         <GeneralText>Ya tienes una cuenta? </GeneralText>
-        <Pressable onPress={() => navigation.navigate('LoginScreen')}>
+        <Pressable onPress={() => navigation.replace('LoginScreen')}>
           <ButtonText style={[styles.text,{color: colors.button}]}>Iniciar sesión</ButtonText>
         </Pressable>
       </View>

@@ -20,18 +20,20 @@ import GeneralIcon from '../../components/generalIcon';
 import GeneralText from '../../components/generalText';
 
 interface Props
-  extends NativeStackScreenProps<RootStackParams, 'LoginScreen'> {}
+  extends NativeStackScreenProps<RootStackParams, 'RegisterScreen'> {}
 
-export default function LoginScreen({ navigation }: Props) {
+export default function RegisterScreen({ navigation }: Props) {
   const { width, height } = useWindowDimensions();
   const isTablet = width >= 768;
   const { colors, isDark } = useTheme();
 
-  const heroHeight = isTablet ? height * 0.5 : height * 0.4;
+  const heroHeight = isTablet ? height * 0.5 : height * 0.3;
 
   const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
@@ -80,6 +82,19 @@ export default function LoginScreen({ navigation }: Props) {
           </View>
           <TextInput
             style={[styles.input, { color: colors.mainText }]}
+            placeholder="Nombre de usuario"
+            placeholderTextColor={colors.secondaryText}
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+        <View style={styles.inputText}>
+          <View style={styles.iconContainer}>
+            <GeneralIcon name="mail-outline" />
+          </View>
+          <TextInput
+            style={[styles.input, { color: colors.mainText }]}
             placeholder="Email"
             placeholderTextColor={colors.secondaryText}
             keyboardType="email-address"
@@ -105,13 +120,27 @@ export default function LoginScreen({ navigation }: Props) {
             />
           </Pressable>
         </View>
-        <Pressable onPress={() => setShowLogin(true)}>
-          <ButtonText style={[styles.text, { color: colors.button }]}>
-            Contraseña olvidada?
-          </ButtonText>
-        </Pressable>
+                <View style={styles.inputText}>
+          <View style={styles.iconContainer}>
+            <GeneralIcon name="lock-open-outline" />
+          </View>
+          <TextInput
+            style={[styles.input, { color: colors.mainText }]}
+            placeholder="Confirmar contraseña"
+            placeholderTextColor={colors.secondaryText}
+            secureTextEntry={!showConfirmPassword}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
+          <Pressable onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+            <GeneralIcon
+              name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
+            />
+          </Pressable>
+        </View>
+    
         <Pressable style={[styles.button, { backgroundColor: colors.button }]}>
-          <ButtonText>Iniciar Sesion</ButtonText>
+          <ButtonText>Crear cuenta</ButtonText>
         </Pressable>
         <View style={styles.container}>
           <View style={[styles.line, { backgroundColor: colors.mainText }]} />
@@ -135,10 +164,10 @@ export default function LoginScreen({ navigation }: Props) {
           </View>
         </Pressable>
         <View style={styles.infoLogin}>
-          <GeneralText>Necesitas una cuenta? </GeneralText>
+          <GeneralText>Ya tienes una cuenta? </GeneralText>
           <Pressable onPress={() => setShowLogin(true)}>
-            <ButtonText style={[styles.text, { color: colors.button }]} onPress={() =>navigation.replace('RegisterScreen') } >
-              Crear cuenta
+            <ButtonText style={[styles.text, { color: colors.button }]} onPress={() =>navigation.replace('LoginScreen') } >
+              Iniciar sesión
             </ButtonText>
           </Pressable>
         </View>
