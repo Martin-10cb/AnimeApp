@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import {
   Alert,
   Image,
+  Modal,
+  Platform,
   Pressable,
   StyleSheet,
   TextInput,
@@ -18,6 +20,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParams } from '../navigation/StackNavigator';
 import GeneralIcon from '../../components/generalIcon';
 import GeneralText from '../../components/generalText';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface Props
   extends NativeStackScreenProps<RootStackParams, 'RegisterScreen'> {}
@@ -25,15 +28,21 @@ interface Props
 export default function RegisterScreen({ navigation }: Props) {
   const { width, height } = useWindowDimensions();
   const isTablet = width >= 768;
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
 
-  const heroHeight = isTablet ? height * 0.5 : height * 0.3;
+  const heroHeight = isTablet ? height * 0.4 : height * 0.3;
 
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [show, setShow] = useState(false);
+  const [date, setDate] = useState<Date | null>(null);
+
+  const formattedDate = date ? date.toLocaleDateString('es-MX') : '';
 
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
@@ -41,7 +50,7 @@ export default function RegisterScreen({ navigation }: Props) {
   const handleGoogleSignIn = async () => {
     try {
       setLoadingGoogle(true);
-      const userCredential = await signInWithGoogle();
+      await signInWithGoogle();
       navigation.replace('MainScreen');
     } catch (error: any) {
       Alert.alert(
@@ -76,19 +85,95 @@ export default function RegisterScreen({ navigation }: Props) {
 
       <View style={styles.generalInfo}>
         <GeneralTitle style={styles.title}>Ingresar</GeneralTitle>
+
         <View style={styles.inputText}>
           <View style={styles.iconContainer}>
-            <GeneralIcon name="mail-outline" />
+            <GeneralIcon name="person-circle-outline" />
           </View>
           <TextInput
             style={[styles.input, { color: colors.mainText }]}
             placeholder="Nombre de usuario"
             placeholderTextColor={colors.secondaryText}
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
+            value={username}
+            onChangeText={setUsername}
           />
         </View>
+
+        <View style={styles.inputTextCalendar}>
+          <TextInput
+            style={[styles.inputCalendar, { color: colors.mainText }]}
+            value={formattedDate}
+            placeholder="Fecha de nacimiento"
+            placeholderTextColor={colors.secondaryText}
+            editable={false}
+          />
+
+          <Pressable
+            style={styles.iconButtonCalendar}
+            onPress={() => setShow(true)}
+          >
+            <GeneralIcon name="calendar-outline" />
+          </Pressable>
+        </View>
+
+        {show && Platform.OS === 'ios' && (
+          <Modal
+            visible={show}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setShow(false)}
+          >
+            <Pressable
+              style={styles.modalOverlay}
+              onPress={() => setShow(false)}
+            >
+              <Pressable
+                style={[
+                  styles.datePickerContainer,
+                  { backgroundColor: colors.background },
+                ]}
+                onPress={() => {}}
+              >
+                <DateTimePicker
+                  value={date ?? new Date()}
+                  mode="date"
+                  display="spinner"
+                  onValueChange={(_, selectedDate) => {
+                    if (selectedDate) {
+                      setDate(selectedDate);
+                    }
+                  }}
+                />
+
+                <Pressable
+                  style={[
+                    styles.dateConfirmButton,
+                    { backgroundColor: colors.button },
+                  ]}
+                  onPress={() => setShow(false)}
+                >
+                  <ButtonText>Aceptar</ButtonText>
+                </Pressable>
+              </Pressable>
+            </Pressable>
+          </Modal>
+        )}
+
+        {show && Platform.OS === 'android' && (
+          <DateTimePicker
+            value={date ?? new Date()}
+            mode="date"
+            display="default"
+            onValueChange={(_, selectedDate) => {
+              setShow(false);
+              if (selectedDate) {
+                setDate(selectedDate);
+              }
+            }}
+            onDismiss={() => setShow(false)}
+          />
+        )}
+
         <View style={styles.inputText}>
           <View style={styles.iconContainer}>
             <GeneralIcon name="mail-outline" />
@@ -102,6 +187,7 @@ export default function RegisterScreen({ navigation }: Props) {
             onChangeText={setEmail}
           />
         </View>
+
         <View style={styles.inputText}>
           <View style={styles.iconContainer}>
             <GeneralIcon name="lock-open-outline" />
@@ -120,7 +206,8 @@ export default function RegisterScreen({ navigation }: Props) {
             />
           </Pressable>
         </View>
-                <View style={styles.inputText}>
+
+        <View style={styles.inputText}>
           <View style={styles.iconContainer}>
             <GeneralIcon name="lock-open-outline" />
           </View>
@@ -132,21 +219,25 @@ export default function RegisterScreen({ navigation }: Props) {
             value={confirmPassword}
             onChangeText={setConfirmPassword}
           />
-          <Pressable onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+          <Pressable
+            onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
             <GeneralIcon
               name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
             />
           </Pressable>
         </View>
-    
+
         <Pressable style={[styles.button, { backgroundColor: colors.button }]}>
           <ButtonText>Crear cuenta</ButtonText>
         </Pressable>
+
         <View style={styles.container}>
           <View style={[styles.line, { backgroundColor: colors.mainText }]} />
           <GeneralText style={styles.text}>O</GeneralText>
           <View style={[styles.line, { backgroundColor: colors.mainText }]} />
         </View>
+
         <Pressable
           onPress={handleGoogleSignIn}
           style={({ pressed }) => [
@@ -157,16 +248,19 @@ export default function RegisterScreen({ navigation }: Props) {
         >
           <View style={styles.content}>
             <GeneralIcon name="logo-google" />
-
             <ButtonText style={styles.text}>
               {loadingGoogle ? 'Cargando...' : 'Continuar con Google'}
             </ButtonText>
           </View>
         </Pressable>
+
         <View style={styles.infoLogin}>
           <GeneralText>Ya tienes una cuenta? </GeneralText>
           <Pressable onPress={() => setShowLogin(true)}>
-            <ButtonText style={[styles.text, { color: colors.button }]} onPress={() =>navigation.replace('LoginScreen') } >
+            <ButtonText
+              style={[styles.text, { color: colors.button }]}
+              onPress={() => navigation.replace('LoginScreen')}
+            >
               Iniciar sesión
             </ButtonText>
           </Pressable>
@@ -251,18 +345,55 @@ const styles = StyleSheet.create({
   googleButton: {
     alignItems: 'center',
     justifyContent: 'center',
-
     width: '85%',
     maxWidth: 320,
     height: 60,
-
     borderRadius: 999,
     backgroundColor: '#8FA2FF',
   },
-
   content: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10, 
+    gap: 10,
+  },
+  inputTextCalendar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: 'gray',
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    height: 50,
+    width: '85%',
+    maxWidth: 350,
+  },
+  inputCalendar: {
+    flex: 1,
+    paddingVertical: 0,
+  },
+  iconButtonCalendar: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 8,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.35)',
+  },
+  datePickerContainer: {
+    width: '85%',
+    maxWidth: 350,
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+  },
+  dateConfirmButton: {
+    marginTop: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 100,
+    alignItems: 'center',
   },
 });
