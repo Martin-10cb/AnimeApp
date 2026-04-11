@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { signInWithGoogle } from '../../auth/googleAuth';
+
 import { hexToRgba } from '../../helpers/utils/color';
 import GeneralTitle from '../../components/generalTitle';
 import ButtonText from '../../components/buttonText';
@@ -21,6 +21,9 @@ import { RootStackParams } from '../navigation/StackNavigator';
 import GeneralIcon from '../../components/generalIcon';
 import GeneralText from '../../components/generalText';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { createUserProfileIfNeeded } from '../../user/userService';
+import { signInWithGoogle } from '../../auth/googleAuth';
+import auth from '@react-native-firebase/auth';
 
 interface Props
   extends NativeStackScreenProps<RootStackParams, 'RegisterScreen'> {}
@@ -50,15 +53,85 @@ export default function RegisterScreen({ navigation }: Props) {
   const handleGoogleSignIn = async () => {
     try {
       setLoadingGoogle(true);
-      await signInWithGoogle();
-      navigation.replace('MainScreen');
-    } catch (error: any) {
-      Alert.alert(
-        'Error',
-        error?.message ?? 'No se pudo iniciar sesión con Google',
-      );
+      const userCredential = await signInWithGoogle();
+      const user = userCredential.user;
+      const { displayName, email, uid } = user;
+      if (!displayName || !email) {
+        throw new Error(
+          'La cuenta de Google no tiene la información necesaria (Nombre o Email).',
+        );
+      }
+      // Create the user profile
+      const userProfile = await createUserProfileIfNeeded({
+        uid: uid,
+        username: displayName,
+        email: email,
+        authProviders: ['google.com'],
+      });
+
+      // Receive the user profile
+      if (userProfile) {
+        // Send them to the onboarding flow to select their favorite genres
+        navigation.replace('SelectGenresScreen'); 
+      } else {
+        // If the profile exists and onboarding is completed, we send them an alert to log in instead of registering again with Google
+        Alert.alert("Este usuario ya existe, inicia sesión o ingresa otra cuenta");
+      }
+    } catch (error) {
+      Alert.alert('Error, no se pudo iniciar sesión con Google');
     } finally {
       setLoadingGoogle(false);
+    }
+  };
+
+  const handleEmailRegister = async () => {
+    // The user must fill all the fields to proceed with registration
+    console.log('Fecha actual en el estado:', date);
+    if (!username || !email || !password || !confirmPassword || !date) {
+      Alert.alert(
+        'Error',
+        'Por favor llena todos los campos antes de continuar.',
+      );
+      return;
+    }
+    // Validate that the password and confirm password fields match
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Las contraseñas no coinciden.');
+      return;
+    }
+    // Password must be at least 8 characters long for better security
+    if (password.length < 8) {
+      Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+    try {
+      // Create the user with email and password using Firebase Authentication
+      const { user } = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      if (user) {
+        // 
+        await createUserProfileIfNeeded({
+          uid: user.uid,
+          username: username,
+          email: email,
+          birthDate: formattedDate,
+          authProviders: ['password'],
+          onBoardingCompleted: false, 
+        });
+        // This would be the first time the user logs in, so we send them to the onboarding flow to select their favorite genres
+        navigation.replace('SelectGenresScreen');
+      }
+    } catch (error: any) {
+      console.error(error);
+      if (error.code === 'auth/email-already-in-box') {
+        Alert.alert('Error', 'Ese correo ya está registrado.');
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert('Error', 'El correo electrónico no es válido.');
+      } else {
+        Alert.alert('Error', 'Ocurrió un error al crear la cuenta.');
+      }
     }
   };
 
@@ -228,7 +301,10 @@ export default function RegisterScreen({ navigation }: Props) {
           </Pressable>
         </View>
 
-        <Pressable style={[styles.button, { backgroundColor: colors.button }]}>
+        <Pressable
+          style={[styles.button, { backgroundColor: colors.button }]}
+          onPress={handleEmailRegister} // <--- Añadimos la función aquí
+        >
           <ButtonText>Crear cuenta</ButtonText>
         </Pressable>
 

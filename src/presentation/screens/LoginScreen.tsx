@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { signInWithGoogle } from '../../auth/googleAuth';
 import { hexToRgba } from '../../helpers/utils/color';
 import GeneralTitle from '../../components/generalTitle';
 import ButtonText from '../../components/buttonText';
@@ -18,6 +17,14 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParams } from '../navigation/StackNavigator';
 import GeneralIcon from '../../components/generalIcon';
 import GeneralText from '../../components/generalText';
+import { signInWithGoogle } from '../../auth/googleAuth';
+import { getFirestore, doc, getDoc } from '@react-native-firebase/firestore';
+import {
+  getAuth,
+  signOut,
+  signInWithEmailAndPassword,
+} from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 interface Props
   extends NativeStackScreenProps<RootStackParams, 'LoginScreen'> {}
@@ -40,17 +47,54 @@ export default function LoginScreen({ navigation }: Props) {
     try {
       setLoadingGoogle(true);
       const userCredential = await signInWithGoogle();
-      navigation.replace('MainScreen');
-    } catch (error: any) {
-      Alert.alert(
-        'Error',
-        error?.message ?? 'No se pudo iniciar sesión con Google',
-      );
+      if (userCredential && userCredential.user) {
+        const { uid } = userCredential.user;
+        const db = getFirestore();
+        const userRef = doc(db, 'users', uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          navigation.replace('MainScreen');
+        } else {
+          const auth = getAuth();
+          await signOut(auth);
+          await GoogleSignin.signOut();
+          Alert.alert(
+            'Cuenta no encontrada',
+            'Este correo no está registrado. Por favor, crea una cuenta primero.',
+          );
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'No se pudo iniciar sesión con Google');
     } finally {
       setLoadingGoogle(false);
     }
   };
 
+  const handleEmailLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Por favor ingresa tu correo y contraseña.');
+      return;
+    }
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password,
+      );
+      if (userCredential.user) {
+        navigation.replace('MainScreen');
+      }
+    } catch (error) {
+      Alert.alert(
+        'Error',
+        'No se pudo iniciar sesión. Verifica tu correo y contraseña.',
+      );
+    }
+  };
+  
   return (
     <View>
       <View style={[styles.heroContainer, { height: heroHeight }]}>
@@ -110,7 +154,10 @@ export default function LoginScreen({ navigation }: Props) {
             Contraseña olvidada?
           </ButtonText>
         </Pressable>
-        <Pressable style={[styles.button, { backgroundColor: colors.button }]}>
+        <Pressable
+          style={[styles.button, { backgroundColor: colors.button }]}
+          onPress={handleEmailLogin}
+        >
           <ButtonText>Iniciar Sesion</ButtonText>
         </Pressable>
         <View style={styles.container}>
@@ -128,7 +175,6 @@ export default function LoginScreen({ navigation }: Props) {
         >
           <View style={styles.content}>
             <GeneralIcon name="logo-google" />
-
             <ButtonText style={styles.text}>
               {loadingGoogle ? 'Cargando...' : 'Continuar con Google'}
             </ButtonText>
@@ -137,7 +183,10 @@ export default function LoginScreen({ navigation }: Props) {
         <View style={styles.infoLogin}>
           <GeneralText>Necesitas una cuenta? </GeneralText>
           <Pressable onPress={() => setShowLogin(true)}>
-            <ButtonText style={[styles.text, { color: colors.button }]} onPress={() =>navigation.replace('RegisterScreen') } >
+            <ButtonText
+              style={[styles.text, { color: colors.button }]}
+              onPress={() => navigation.replace('RegisterScreen')}
+            >
               Crear cuenta
             </ButtonText>
           </Pressable>
@@ -234,6 +283,6 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10, 
+    gap: 10,
   },
 });

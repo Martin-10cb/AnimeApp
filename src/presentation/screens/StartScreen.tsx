@@ -25,8 +25,6 @@ export default function StartScreen({navigation}: Props) {
   const heroHeight = isTablet ? height * 0.6 : height * 0.5;
   const cardWidth = isTablet ? 456 : 352;
 
-  const [showLogin, setShowLogin] = useState(false);
-
 
   return (
     <View>
