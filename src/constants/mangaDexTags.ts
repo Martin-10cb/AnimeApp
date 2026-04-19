@@ -1,6 +1,6 @@
 export const GENRE_MAP: Record<string, string> = {
   "accion": "391b0423-db20-4562-911e-0a0a64feb47e",
-  "romance": "423e21fe-06b5-4c0d-9fd2-47d802e59f2c",
+ "romance": "423e21fe-06b5-4c0d-9fd2-47d802e59f2c",
   "harem": "aafb99c1-7fde-44e4-86f6-f11100439c2c",
   "comedia": "4d32b451-11ed-4a30-a828-858129ee1146",
   "drama": "b9af3a63-f058-46de-a9a0-e0c13906197a",

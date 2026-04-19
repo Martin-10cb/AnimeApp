@@ -6,6 +6,7 @@ import RootLayout from './components/globalLayout';
 import { useEffect } from 'react';
 import { configureGoogleSignIn } from './auth/googleAuth';
 
+
 export const MainApp = () => {
   const { navigationTheme } = useTheme();
     useEffect(() => {

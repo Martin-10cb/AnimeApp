@@ -1,7 +1,8 @@
 import { Text } from "@react-navigation/elements";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { View } from "react-native";
 import { RootStackParams } from "../navigation/StackNavigator";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+
 
 interface Props
   extends NativeStackScreenProps<RootStackParams, 'MainScreen'> {}
