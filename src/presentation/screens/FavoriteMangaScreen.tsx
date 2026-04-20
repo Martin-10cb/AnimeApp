@@ -5,14 +5,14 @@ import { DrawerTabParams } from '../navigation/bottomTabNavigator';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
-interface Props extends NativeStackScreenProps<DrawerTabParams, 'MainScreen'> {}
+interface Props extends NativeStackScreenProps<DrawerTabParams, 'FavoriteMangaScreen'> {}
 
-export default function MainScreen({ navigation }: Props) {
+export default function FavoriteMangaScreen({ navigation }: Props) {
   return (
-    // En MainScreen.tsx
+    // En FavoriteMangaScreen.tsx
     <SafeAreaView style={{ flex: 1,}}>
       <Text>
-        MainScreen
+        FavoriteMangaScreen
       </Text>
     </SafeAreaView>
   );

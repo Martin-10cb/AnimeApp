@@ -12,11 +12,14 @@ import MainScreen from '../screens/MainScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import SelectGenresScreen from '../screens/SelectGenreScreen';
 import CompleteProfileScreen from '../screens/CompleteProfileScreen';
+import { DrawerNavigation } from './BottomTabNavigator';
+
+
 
 export type RootStackParams = {
   StartScreen: undefined;
   LoginScreen: undefined;
-  MainScreen: undefined;
+  DrawerNavigation: undefined;
   RegisterScreen: undefined;
   SelectGenresScreen: undefined;
   CompleteProfileScreen: undefined;
@@ -45,7 +48,7 @@ export const StackNavigator = () => {
         // --- RUTAS PARA USUARIOS LOGUEADOS ---
         // Si el usuario ya inició sesión, la app entra directo aquí
         <Stack.Group>
-          <Stack.Screen name="MainScreen" component={MainScreen} />
+          <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
           {/* Agrega aquí otras pantallas internas si las tienes */}
         </Stack.Group>
       ) : (

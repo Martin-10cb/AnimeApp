@@ -1,14 +1,14 @@
 import React from "react"
-import { StyleSheet, Text } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
+import { StyleSheet, Text, View } from "react-native"
+
 
 
 export default function RootLayout({children}: {children: React.ReactNode}  ) {
 
   return (
-    <SafeAreaView style={[styles.container]}>
+    <View style={[styles.container]}>
       {children}
-    </SafeAreaView>
+    </View>
   )
 }
 

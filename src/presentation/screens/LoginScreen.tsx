@@ -53,7 +53,7 @@ export default function LoginScreen({ navigation }: Props) {
         const userRef = doc(db, 'users', uid);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
-          navigation.replace('MainScreen');
+          navigation.replace('DrawerNavigation');
         } else {
           const auth = getAuth();
           await signOut(auth);
@@ -85,7 +85,7 @@ export default function LoginScreen({ navigation }: Props) {
         password,
       );
       if (userCredential.user) {
-        navigation.replace('MainScreen');
+        navigation.replace('DrawerNavigation');
       }
     } catch (error) {
       Alert.alert(

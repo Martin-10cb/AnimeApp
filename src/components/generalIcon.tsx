@@ -19,7 +19,7 @@ export default function GeneralIcon({ name, size, color }: Props) {
     <Ionicons
       name={name}
       size={iconSize}
-      color={color ?? colors.mainText}
+      color={colors.mainText}
     />
   );
 }

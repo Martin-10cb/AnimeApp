@@ -5,14 +5,14 @@ import { DrawerTabParams } from '../navigation/bottomTabNavigator';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
-interface Props extends NativeStackScreenProps<DrawerTabParams, 'MainScreen'> {}
+interface Props extends NativeStackScreenProps<DrawerTabParams, 'SettingsScreen'> {}
 
-export default function MainScreen({ navigation }: Props) {
+export default function SettingsScreen({ navigation }: Props) {
   return (
-    // En MainScreen.tsx
+    // En SettingsScreen.tsx
     <SafeAreaView style={{ flex: 1,}}>
       <Text>
-        MainScreen
+        SettingsScreen
       </Text>
     </SafeAreaView>
   );
