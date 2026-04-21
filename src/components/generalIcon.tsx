@@ -13,7 +13,7 @@ export default function GeneralIcon({ name, size, color }: Props) {
   const { width } = useWindowDimensions();
 
   const isTablet = width >= 768;
-  const iconSize = size ?? (isTablet ? 26 : 20);
+  const iconSize = size ?? (isTablet ? 30 : 24);
 
   return (
     <Ionicons

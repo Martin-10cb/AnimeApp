@@ -37,6 +37,7 @@ export const DrawerNavigation = () => {
           borderTopWidth: 0,
           paddingBottom: 0,
           justifyContent: 'center', 
+          borderRadius: 100
         },
         tabBarIconStyle: {
           width: '100%',
